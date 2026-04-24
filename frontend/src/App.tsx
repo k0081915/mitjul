@@ -10,21 +10,23 @@ function App() {
   return (
     <div className="app-shell">
       <header className="app-header">
-        <NavLink to="/" className="brand" aria-label="밑줄 홈">
-          밑줄
-        </NavLink>
-        <nav className="app-nav" aria-label="주요 메뉴">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.end}
-              className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
-            >
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
+        <div className="nav-inner">
+          <NavLink to="/" className="brand" aria-label="밑줄 홈">
+            밑줄
+          </NavLink>
+          <nav className="app-nav" aria-label="주요 메뉴">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.end}
+                className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
       </header>
       <main className="app-main">
         <Outlet />

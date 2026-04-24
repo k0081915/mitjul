@@ -6,16 +6,44 @@ export function QuotesPage() {
 
   return (
     <section className="page-shell">
-      <div>
-        <p className="page-kicker">Quotes</p>
-        <h1 className="page-title">문장 모음</h1>
-        <p className="page-description">전체 인용문 검색과 감정 태그 필터 화면으로 확장합니다.</p>
+      <div className="section section-light hero-section">
+        <div className="content-narrow">
+          <p className="page-kicker">Quotes</p>
+          <h1 className="page-title">문장 모음.</h1>
+          <p className="page-description">책마다 흩어진 밑줄과 생각을 하나의 목록으로 다시 봅니다.</p>
+        </div>
       </div>
-      <div className="panel">
-        <h2>검색 준비</h2>
-        {isLoading && <p className="status-text">문장을 불러오는 중입니다.</p>}
-        {quotes && <p>검색 대상 인용문 {quotes.length}개</p>}
-        {tags && <p>사용 가능한 태그 {tags.length}개</p>}
+
+      <div className="section section-white">
+        <div className="content-wide grid grid-2">
+          <div>
+            <h2 className="section-title">전체 인용문</h2>
+            {isLoading && <div className="empty-state">문장을 불러오는 중입니다.</div>}
+            {quotes && (
+              <div className="card-list">
+                {quotes.slice(0, 8).map((quote) => (
+                  <article className="list-card" key={quote.id}>
+                    <p className="quote-text">{quote.content}</p>
+                    <p className="list-card-meta">{quote.bookTitle}</p>
+                  </article>
+                ))}
+              </div>
+            )}
+          </div>
+          <aside className="panel">
+            <h2>감정 태그</h2>
+            <p>사용 가능한 태그 {tags?.length ?? 0}개</p>
+            {tags && (
+              <div className="tag-row">
+                {tags.map((tag) => (
+                  <span className="badge" key={tag.id}>
+                    {tag.name}
+                  </span>
+                ))}
+              </div>
+            )}
+          </aside>
+        </div>
       </div>
     </section>
   )

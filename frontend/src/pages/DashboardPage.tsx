@@ -5,23 +5,68 @@ export function DashboardPage() {
 
   return (
     <section className="page-shell">
-      <div>
-        <p className="page-kicker">Monthly Retrospective</p>
-        <h1 className="page-title">이번 달 독서 회고</h1>
-        <p className="page-description">
-          저장된 책, 인용문, 리뷰 데이터를 바탕으로 홈 화면을 구성합니다.
-        </p>
+      <div className="section section-dark hero-section">
+        <div className="content-narrow">
+          <p className="page-kicker">Mitjul</p>
+          <h1 className="page-title">이번 달 독서 회고.</h1>
+          <p className="page-description">읽은 책과 남긴 문장을 조용히 모아 다시 볼 수 있게 정리합니다.</p>
+        </div>
       </div>
-      <div className="panel">
-        <h2>API 연결 상태</h2>
-        {isLoading && <p className="status-text">대시보드 데이터를 불러오는 중입니다.</p>}
-        {isError && <p className="status-text">대시보드 데이터를 불러오지 못했습니다.</p>}
-        {data && (
-          <p>
-            {data.year}년 {data.month}월 · 활성 책 {data.activeBookCount}권 · 인용문 {data.quoteCount}개
-          </p>
-        )}
+
+      <div className="section section-light">
+        <div className="content-wide">
+          {isLoading && <div className="empty-state">대시보드 데이터를 불러오는 중입니다.</div>}
+          {isError && <div className="empty-state">대시보드 데이터를 불러오지 못했습니다.</div>}
+          {data && (
+            <div className="grid grid-3">
+              <div className="panel">
+                <h2>활성 책</h2>
+                <p>{data.year}년 {data.month}월 기준</p>
+                <span className="metric-value">{data.activeBookCount}</span>
+              </div>
+              <div className="panel">
+                <h2>남긴 문장</h2>
+                <p>이번 달에 저장한 인용문</p>
+                <span className="metric-value">{data.quoteCount}</span>
+              </div>
+              <div className="panel">
+                <h2>작성한 리뷰</h2>
+                <p>완독 후 남긴 기록</p>
+                <span className="metric-value">{data.reviewCount}</span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
+
+      {data && (
+        <div className="section section-white">
+          <div className="content-wide grid grid-2">
+            <div>
+              <h2 className="section-title">최근 문장</h2>
+              <div className="card-list">
+                {data.recentQuotes.slice(0, 3).map((quote) => (
+                  <article className="list-card" key={quote.id}>
+                    <p className="quote-text">{quote.content}</p>
+                    <p className="list-card-meta">{quote.bookTitle}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h2 className="section-title">최근 리뷰</h2>
+              <div className="card-list">
+                {data.recentReviews.slice(0, 3).map((review) => (
+                  <article className="list-card" key={review.id}>
+                    <h3 className="list-card-title">{review.oneLiner}</h3>
+                    <p className="list-card-meta">{review.bookTitle} · {review.rating}점</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }
