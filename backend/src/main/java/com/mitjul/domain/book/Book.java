@@ -11,6 +11,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -61,4 +63,98 @@ public class Book {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    private Book(
+        User user,
+        String title,
+        String author,
+        String isbn,
+        String coverImageUrl,
+        String presetCoverKey,
+        BookStatus status,
+        LocalDate startedAt,
+        LocalDate finishedAt
+    ) {
+        this.user = user;
+        this.title = title;
+        this.author = author;
+        this.isbn = isbn;
+        this.coverImageUrl = coverImageUrl;
+        this.presetCoverKey = presetCoverKey;
+        this.status = status;
+        this.startedAt = startedAt;
+        this.finishedAt = finishedAt;
+    }
+
+    public static Book create(
+        User user,
+        String title,
+        String author,
+        String isbn,
+        String coverImageUrl,
+        String presetCoverKey,
+        BookStatus status,
+        LocalDate startedAt,
+        LocalDate finishedAt
+    ) {
+        return new Book(
+            user,
+            title,
+            author,
+            isbn,
+            coverImageUrl,
+            presetCoverKey,
+            status == null ? BookStatus.READING : status,
+            startedAt,
+            finishedAt
+        );
+    }
+
+    public void update(
+        String title,
+        String author,
+        String isbn,
+        String coverImageUrl,
+        String presetCoverKey,
+        BookStatus status,
+        LocalDate startedAt,
+        LocalDate finishedAt
+    ) {
+        if (title != null) {
+            this.title = title;
+        }
+        if (author != null) {
+            this.author = author;
+        }
+        if (isbn != null) {
+            this.isbn = isbn;
+        }
+        if (coverImageUrl != null) {
+            this.coverImageUrl = coverImageUrl;
+        }
+        if (presetCoverKey != null) {
+            this.presetCoverKey = presetCoverKey;
+        }
+        if (status != null) {
+            this.status = status;
+        }
+        if (startedAt != null) {
+            this.startedAt = startedAt;
+        }
+        if (finishedAt != null) {
+            this.finishedAt = finishedAt;
+        }
+    }
+
+    @PrePersist
+    void prePersist() {
+        LocalDateTime now = LocalDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
+    @PreUpdate
+    void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }
