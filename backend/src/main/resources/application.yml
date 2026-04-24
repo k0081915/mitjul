@@ -3,13 +3,22 @@ spring:
     name: backend
 
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/mitjul}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/mitjul?serverTimezone=Asia/Seoul&characterEncoding=UTF-8}
     username: ${SPRING_DATASOURCE_USERNAME:root}
     password: ${SPRING_DATASOURCE_PASSWORD:password}
 
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: validate
 
   flyway:
     enabled: true
+
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://127.0.0.1:5173}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
