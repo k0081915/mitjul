@@ -48,9 +48,8 @@ public class QuoteCardService {
             return List.of();
         }
 
-        return quoteCardRepository.search(normalizedKeyword, bookId, normalizedTagName)
+        return quoteCardRepository.search(SEED_USER_ID, normalizedKeyword, bookId, normalizedTagName)
             .stream()
-            .filter(quoteCard -> quoteCard.getBook().getUser().getId().equals(SEED_USER_ID))
             .map(QuoteCardResponse::from)
             .toList();
     }

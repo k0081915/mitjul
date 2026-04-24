@@ -9,17 +9,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.EntityListeners;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @Entity
 @Table(name = "reviews")
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Review {
 
@@ -40,9 +43,11 @@ public class Review {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String body;
 
+    @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
@@ -63,15 +68,4 @@ public class Review {
         this.body = body;
     }
 
-    @PrePersist
-    void prePersist() {
-        LocalDateTime now = LocalDateTime.now();
-        this.createdAt = now;
-        this.updatedAt = now;
-    }
-
-    @PreUpdate
-    void preUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 }

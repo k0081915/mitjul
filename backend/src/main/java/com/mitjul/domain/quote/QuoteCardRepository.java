@@ -29,13 +29,15 @@ public interface QuoteCardRepository extends JpaRepository<QuoteCard, Long> {
         from QuoteCard q
         join q.book b
         left join q.tags t
-        where (:keyword is null or lower(q.content) like lower(concat('%', :keyword, '%'))
+        where b.user.id = :userId
+          and (:keyword is null or lower(q.content) like lower(concat('%', :keyword, '%'))
             or lower(q.memo) like lower(concat('%', :keyword, '%')))
           and (:bookId is null or b.id = :bookId)
           and (:tagName is null or t.name = :tagName)
         order by q.createdAt desc
         """)
     List<QuoteCard> search(
+        @Param("userId") Long userId,
         @Param("keyword") String keyword,
         @Param("bookId") Long bookId,
         @Param("tagName") String tagName

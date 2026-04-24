@@ -12,9 +12,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.EntityListeners;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -22,10 +21,14 @@ import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @Entity
 @Table(name = "quote_cards")
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class QuoteCard {
 
@@ -53,9 +56,11 @@ public class QuoteCard {
     )
     private Set<Tag> tags = new LinkedHashSet<>();
 
+    @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
@@ -99,15 +104,4 @@ public class QuoteCard {
         }
     }
 
-    @PrePersist
-    void prePersist() {
-        LocalDateTime now = LocalDateTime.now();
-        this.createdAt = now;
-        this.updatedAt = now;
-    }
-
-    @PreUpdate
-    void preUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 }

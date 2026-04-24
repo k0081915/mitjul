@@ -7,8 +7,10 @@ import com.mitjul.domain.review.ReviewRepository;
 import com.mitjul.dto.dashboard.DashboardSummaryResponse;
 import com.mitjul.dto.dashboard.RecentReviewResponse;
 import com.mitjul.dto.quote.QuoteCardResponse;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.YearMonth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,18 +26,16 @@ public class DashboardService {
     private final BookRepository bookRepository;
     private final QuoteCardRepository quoteCardRepository;
     private final ReviewRepository reviewRepository;
+    private final Clock clock;
 
     public DashboardSummaryResponse getSummary(Integer year, Integer month) {
         YearMonth targetMonth = resolveTargetMonth(year, month);
         LocalDate monthStart = targetMonth.atDay(1);
         LocalDate monthEnd = targetMonth.atEndOfMonth();
         LocalDateTime monthStartAt = monthStart.atStartOfDay();
-        LocalDateTime monthEndAt = monthEnd.plusDays(1).atStartOfDay().minusNanos(1);
+        LocalDateTime monthEndAt = monthEnd.atTime(LocalTime.MAX);
         LocalDateTime yearStartAt = LocalDate.of(targetMonth.getYear(), 1, 1).atStartOfDay();
-        LocalDateTime yearEndAt = LocalDate.of(targetMonth.getYear(), 12, 31)
-            .plusDays(1)
-            .atStartOfDay()
-            .minusNanos(1);
+        LocalDateTime yearEndAt = LocalDate.of(targetMonth.getYear(), 12, 31).atTime(LocalTime.MAX);
 
         long activeBookCount = bookRepository.countActiveBooksInPeriod(
             SEED_USER_ID,
@@ -86,7 +86,7 @@ public class DashboardService {
     }
 
     private YearMonth resolveTargetMonth(Integer year, Integer month) {
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(clock);
         int resolvedYear = year == null ? today.getYear() : year;
         int resolvedMonth = month == null ? today.getMonthValue() : month;
         return YearMonth.of(resolvedYear, resolvedMonth);
