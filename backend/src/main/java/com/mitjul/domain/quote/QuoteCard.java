@@ -12,8 +12,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import lombok.AccessLevel;
@@ -55,4 +58,56 @@ public class QuoteCard {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    private QuoteCard(Book book, Integer page, String content, String memo, Collection<Tag> tags) {
+        this.book = book;
+        this.page = page;
+        this.content = content;
+        this.memo = memo;
+        replaceTags(tags);
+    }
+
+    public static QuoteCard create(
+        Book book,
+        Integer page,
+        String content,
+        String memo,
+        Collection<Tag> tags
+    ) {
+        return new QuoteCard(book, page, content, memo, tags);
+    }
+
+    public void update(Integer page, String content, String memo, Collection<Tag> tags) {
+        if (page != null) {
+            this.page = page;
+        }
+        if (content != null) {
+            this.content = content;
+        }
+        if (memo != null) {
+            this.memo = memo;
+        }
+        if (tags != null) {
+            replaceTags(tags);
+        }
+    }
+
+    private void replaceTags(Collection<Tag> tags) {
+        this.tags.clear();
+        if (tags != null) {
+            this.tags.addAll(tags);
+        }
+    }
+
+    @PrePersist
+    void prePersist() {
+        LocalDateTime now = LocalDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
+    @PreUpdate
+    void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }
