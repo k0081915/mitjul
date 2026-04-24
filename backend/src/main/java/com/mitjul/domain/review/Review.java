@@ -9,6 +9,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -43,4 +45,33 @@ public class Review {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    private Review(Book book, Byte rating, String oneLiner, String body) {
+        this.book = book;
+        this.rating = rating;
+        this.oneLiner = oneLiner;
+        this.body = body;
+    }
+
+    public static Review create(Book book, Byte rating, String oneLiner, String body) {
+        return new Review(book, rating, oneLiner, body);
+    }
+
+    public void update(Byte rating, String oneLiner, String body) {
+        this.rating = rating;
+        this.oneLiner = oneLiner;
+        this.body = body;
+    }
+
+    @PrePersist
+    void prePersist() {
+        LocalDateTime now = LocalDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
+    @PreUpdate
+    void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }
