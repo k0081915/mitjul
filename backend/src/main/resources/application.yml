@@ -8,6 +8,7 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD:password}
 
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: validate
 
