@@ -7,7 +7,6 @@ import type { Book, BookPayload, BookStatus } from '../types/api'
 const defaultBookForm = {
   title: '',
   author: '',
-  isbn: '',
   status: 'READING' as BookStatus,
   startedAt: new Date().toISOString().slice(0, 10),
   finishedAt: '',
@@ -60,7 +59,6 @@ export function BooksPage() {
     setBookForm({
       title: book.title,
       author: book.author,
-      isbn: book.isbn ?? '',
       status: book.status,
       startedAt: book.startedAt,
       finishedAt: book.finishedAt ?? '',
@@ -164,14 +162,6 @@ export function BooksPage() {
                   </select>
                 </label>
                 <label className="field">
-                  <span>ISBN</span>
-                  <input
-                    maxLength={20}
-                    value={bookForm.isbn}
-                    onChange={(event) => setBookForm((prev) => ({ ...prev, isbn: event.target.value }))}
-                  />
-                </label>
-                <label className="field">
                   <span>시작일</span>
                   <input
                     required
@@ -261,7 +251,6 @@ function toBookPayload(form: typeof defaultBookForm): BookPayload {
   return {
     title: form.title.trim(),
     author: form.author.trim(),
-    isbn: nullable(form.isbn),
     status: form.status,
     startedAt: form.startedAt,
     finishedAt: nullable(form.finishedAt),

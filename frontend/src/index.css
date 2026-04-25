@@ -438,8 +438,17 @@ button:focus-visible {
 
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 12px;
+}
+
+.form-grid > .field {
+  grid-column: span 2;
+}
+
+.form-grid > .field:nth-child(4),
+.form-grid > .field:nth-child(5) {
+  grid-column: span 3;
 }
 
 .form-grid-compact {
@@ -959,6 +968,12 @@ button:focus-visible {
   .form-grid,
   .form-grid-compact {
     grid-template-columns: 1fr;
+  }
+
+  .form-grid > .field,
+  .form-grid > .field:nth-child(4),
+  .form-grid > .field:nth-child(5) {
+    grid-column: span 1;
   }
 
   .bento-wide,

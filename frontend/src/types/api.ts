@@ -4,7 +4,6 @@ export type Book = {
   id: number
   title: string
   author: string
-  isbn?: string | null
   coverImageUrl?: string | null
   presetCoverKey?: string | null
   status: BookStatus
@@ -59,7 +58,6 @@ export type DashboardSummary = {
 export type BookPayload = {
   title: string
   author: string
-  isbn?: string | null
   coverImageUrl?: string | null
   presetCoverKey?: string | null
   status?: BookStatus | null
