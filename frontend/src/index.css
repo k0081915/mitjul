@@ -223,9 +223,35 @@ button:focus-visible {
   height: 248px;
   padding: 22px 18px;
   border-radius: 8px;
-  background: var(--sk-white);
-  color: var(--sk-text);
-  box-shadow: rgba(0, 0, 0, 0.22) 3px 5px 30px 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 14px, transparent 14px),
+    linear-gradient(135deg, #182334 0%, #2c4058 100%);
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow:
+    rgba(0, 0, 0, 0.36) 8px 16px 34px -16px,
+    rgba(255, 255, 255, 0.1) 0 1px 0 inset;
+  overflow: hidden;
+  transition: transform 220ms var(--sk-ease), box-shadow 220ms var(--sk-ease);
+}
+
+.book-slab::before {
+  content: "";
+  position: absolute;
+  inset: 18px 18px auto auto;
+  width: 48px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.18;
+}
+
+.book-slab::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 16px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .book-slab strong {
@@ -239,7 +265,7 @@ button:focus-visible {
 .book-slab span {
   display: block;
   margin-top: 8px;
-  color: var(--sk-text-secondary);
+  color: rgba(255, 255, 255, 0.62);
   font-size: 12px;
   line-height: 1.33;
   letter-spacing: -0.12px;
@@ -249,24 +275,49 @@ button:focus-visible {
   right: 30px;
   bottom: 18px;
   z-index: 3;
-  background: var(--sk-white);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0 14px, transparent 14px),
+    linear-gradient(135deg, #111111 0%, #2a2a2d 100%);
+}
+
+.book-stack:hover .book-slab.primary {
+  transform: translateY(-8px);
+  box-shadow:
+    rgba(0, 0, 0, 0.42) 10px 22px 42px -18px,
+    rgba(255, 255, 255, 0.12) 0 1px 0 inset;
 }
 
 .book-slab.secondary {
   top: 18px;
   left: 32px;
   z-index: 2;
-  background: #f5f5f7;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0 14px, transparent 14px),
+    linear-gradient(135deg, #263544 0%, #4b6476 100%);
   transform: rotate(-7deg);
+}
+
+.book-stack:hover .book-slab.secondary {
+  transform: translate(-8px, -4px) rotate(-8deg);
 }
 
 .book-slab.tertiary {
   right: 92px;
   bottom: 0;
   z-index: 1;
-  background: var(--sk-surface-dark);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 14px, transparent 14px),
+    linear-gradient(135deg, #26231f 0%, #4a433b 100%);
   color: var(--sk-white);
   transform: rotate(6deg);
+}
+
+.book-stack:hover .book-slab.tertiary {
+  transform: translate(6px, 6px) rotate(5deg);
+}
+
+.book-slab.tertiary::after {
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .page-kicker {
@@ -484,7 +535,24 @@ button:focus-visible {
 }
 
 .field textarea {
-  resize: vertical;
+  min-height: 104px;
+  resize: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.22) transparent;
+}
+
+.field textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.field textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.field textarea::-webkit-scrollbar-thumb {
+  border: 2px solid #f5f5f7;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.22);
 }
 
 .field input:focus,
@@ -774,7 +842,7 @@ button:focus-visible {
 .book-tile {
   position: relative;
   display: grid;
-  grid-template-rows: 170px auto;
+  grid-template-rows: 176px 1fr;
   min-height: 406px;
   padding: 28px;
   border-radius: 8px;
@@ -797,20 +865,85 @@ button:focus-visible {
 }
 
 .book-tile-cover {
+  position: relative;
   width: 116px;
   height: 154px;
   margin: 0 auto;
   border-radius: 8px;
-  background: var(--sk-white);
-  box-shadow: rgba(0, 0, 0, 0.18) 3px 5px 24px 0;
+  color: var(--sk-white);
+  overflow: hidden;
+  box-shadow:
+    rgba(0, 0, 0, 0.16) 0 18px 34px -18px,
+    rgba(0, 0, 0, 0.18) 3px 5px 24px 0;
 }
 
-.book-tile:nth-child(3n + 1) .book-tile-cover {
-  background: var(--sk-black);
+.book-tile-cover::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 12px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.18);
 }
 
-.book-tile:nth-child(3n + 2) .book-tile-cover {
-  background: var(--sk-surface-dark);
+.book-tile-cover::after {
+  content: "";
+  position: absolute;
+  inset: 18px 16px auto auto;
+  width: 34px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.28;
+}
+
+.cover-preset-1 {
+  background:
+    linear-gradient(0deg, transparent 64%, rgba(255, 255, 255, 0.1) 64% 65%, transparent 65%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0 10px, transparent 10px),
+    linear-gradient(135deg, #050505 0%, #1d1d1f 100%);
+}
+
+.cover-preset-2 {
+  background:
+    linear-gradient(0deg, transparent 62%, rgba(255, 255, 255, 0.12) 62% 63%, transparent 63%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.14) 0 10px, transparent 10px),
+    linear-gradient(135deg, #162338 0%, #2d4059 100%);
+}
+
+.cover-preset-3 {
+  background:
+    linear-gradient(0deg, transparent 64%, rgba(0, 0, 0, 0.08) 64% 65%, transparent 65%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.08) 0 10px, transparent 10px),
+    linear-gradient(135deg, #f9f9fb 0%, #e8e8ed 100%);
+  color: var(--sk-text);
+}
+
+.cover-preset-3::before {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.cover-preset-4 {
+  background:
+    linear-gradient(0deg, transparent 62%, rgba(255, 255, 255, 0.1) 62% 63%, transparent 63%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.14) 0 10px, transparent 10px),
+    linear-gradient(135deg, #3a332d 0%, #776b5d 100%);
+}
+
+.cover-preset-5 {
+  background:
+    linear-gradient(0deg, transparent 62%, rgba(255, 255, 255, 0.1) 62% 63%, transparent 63%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.12) 0 10px, transparent 10px),
+    linear-gradient(135deg, #12312d 0%, #476a62 100%);
+}
+
+.cover-status-completed {
+  box-shadow:
+    rgba(0, 113, 227, 0.14) 0 18px 34px -18px,
+    rgba(0, 0, 0, 0.16) 3px 5px 24px 0;
+}
+
+.cover-status-paused {
+  filter: saturate(0.7);
 }
 
 .book-tile h2 {
@@ -831,29 +964,68 @@ button:focus-visible {
 }
 
 .quote-sheet {
-  width: min(360px, 100%);
+  position: relative;
+  width: min(400px, 100%);
   min-height: 260px;
-  padding: 34px;
+  padding: 36px 34px 34px 48px;
   border-radius: 8px;
-  background: var(--sk-white);
-  color: var(--sk-text);
-  box-shadow: rgba(0, 0, 0, 0.14) 3px 5px 30px 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 16px, transparent 16px),
+    linear-gradient(135deg, #121820 0%, #26384a 100%);
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow:
+    rgba(0, 0, 0, 0.36) 8px 16px 34px -16px,
+    rgba(255, 255, 255, 0.1) 0 1px 0 inset;
+  overflow: hidden;
   transform: rotate(-3deg);
+  transition: transform 220ms var(--sk-ease), box-shadow 220ms var(--sk-ease);
+}
+
+.quote-sheet:hover {
+  transform: translateY(-6px) rotate(-2deg);
+  box-shadow:
+    rgba(0, 0, 0, 0.42) 10px 22px 42px -18px,
+    rgba(255, 255, 255, 0.12) 0 1px 0 inset;
+}
+
+.quote-sheet::before {
+  content: "";
+  position: absolute;
+  inset: 24px 28px auto auto;
+  width: 72px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.2;
+}
+
+.quote-sheet::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 18px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .quote-sheet p {
+  position: relative;
+  z-index: 1;
   margin: 0;
   font-family: var(--sk-font-display);
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 400;
-  line-height: 1.14;
-  letter-spacing: 0.196px;
+  line-height: 1.18;
+  letter-spacing: 0;
+  word-break: keep-all;
 }
 
 .quote-sheet span {
+  position: relative;
+  z-index: 1;
   display: block;
   margin-top: 24px;
-  color: var(--sk-text-tertiary);
+  color: rgba(255, 255, 255, 0.58);
   font-size: 14px;
   line-height: 1.29;
   letter-spacing: -0.224px;
@@ -1029,5 +1201,16 @@ button:focus-visible {
 
   .page-description {
     font-size: 19px;
+  }
+
+  .quote-sheet {
+    width: min(370px, 100%);
+    min-height: 240px;
+    padding: 34px 28px 30px 38px;
+  }
+
+  .quote-sheet p {
+    font-size: 24px;
+    line-height: 1.18;
   }
 }

@@ -203,7 +203,7 @@ export function BooksPage() {
                   role="button"
                   tabIndex={0}
                 >
-                  <div className="book-tile-cover" aria-hidden="true" />
+                  <div className={`book-tile-cover ${getCoverPresetClass(book)}`} aria-hidden="true" />
                   <div>
                     <p className="page-kicker">{book.status}</p>
                     <h2>{book.title}</h2>
@@ -245,6 +245,11 @@ export function BooksPage() {
       )}
     </section>
   )
+}
+
+function getCoverPresetClass(book: Book) {
+  const presetIndex = ((book.id - 1) % 5) + 1
+  return `cover-preset-${presetIndex} cover-status-${book.status.toLowerCase()}`
 }
 
 function toBookPayload(form: typeof defaultBookForm): BookPayload {
