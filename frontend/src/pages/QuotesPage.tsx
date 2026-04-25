@@ -1,8 +1,26 @@
+import { type FormEvent, useState } from 'react'
 import { useQuoteSearch, useTags } from '../api/queries'
 
 export function QuotesPage() {
-  const { data: quotes, isLoading } = useQuoteSearch({})
+  const [keywordInput, setKeywordInput] = useState('')
+  const [tagInput, setTagInput] = useState('')
+  const [searchParams, setSearchParams] = useState({})
+  const { data: quotes, isLoading } = useQuoteSearch(searchParams)
   const { data: tags } = useTags()
+
+  const handleSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setSearchParams({
+      q: keywordInput.trim() || undefined,
+      tag: tagInput || undefined,
+    })
+  }
+
+  const clearSearch = () => {
+    setKeywordInput('')
+    setTagInput('')
+    setSearchParams({})
+  }
 
   return (
     <section className="page-shell">
@@ -26,6 +44,33 @@ export function QuotesPage() {
         <div className="content-wide bento-grid">
           <div className="bento-feature">
             <h2 className="section-title">전체 인용문</h2>
+            <form className="filter-bar" onSubmit={handleSearch}>
+              <label className="field field-inline">
+                <span>검색어</span>
+                <input
+                  value={keywordInput}
+                  onChange={(event) => setKeywordInput(event.target.value)}
+                  placeholder="문장이나 메모 검색"
+                />
+              </label>
+              <label className="field field-inline">
+                <span>태그</span>
+                <select value={tagInput} onChange={(event) => setTagInput(event.target.value)}>
+                  <option value="">전체</option>
+                  {tags?.map((tag) => (
+                    <option key={tag.id} value={tag.name}>
+                      {tag.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button className="cta-link" type="submit">
+                검색
+              </button>
+              <button className="button-secondary" type="button" onClick={clearSearch}>
+                초기화
+              </button>
+            </form>
             {isLoading && <div className="empty-state">문장을 불러오는 중입니다.</div>}
             {quotes && (
               <div className="card-list">

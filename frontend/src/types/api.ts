@@ -55,3 +55,29 @@ export type DashboardSummary = {
   recentReviews: RecentReview[]
   yearlyQuotes: QuoteCard[]
 }
+
+export type BookPayload = {
+  title: string
+  author: string
+  isbn?: string | null
+  coverImageUrl?: string | null
+  presetCoverKey?: string | null
+  status?: BookStatus | null
+  startedAt: string
+  finishedAt?: string | null
+}
+
+export type BookUpdatePayload = Partial<BookPayload>
+
+export type QuotePayload = {
+  page?: number | null
+  content: string
+  memo?: string | null
+  tagNames: string[]
+}
+
+export type ReviewPayload = {
+  rating: number
+  oneLiner: string
+  body: string
+}
