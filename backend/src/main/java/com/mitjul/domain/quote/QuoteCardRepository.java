@@ -8,6 +8,12 @@ import org.springframework.data.repository.query.Param;
 
 public interface QuoteCardRepository extends JpaRepository<QuoteCard, Long> {
 
+    interface BookQuoteCount {
+        Long getBookId();
+
+        Long getQuoteCount();
+    }
+
     List<QuoteCard> findByBookIdOrderByCreatedAtDesc(Long bookId);
 
     long countByBookUserIdAndCreatedAtBetween(
@@ -41,5 +47,19 @@ public interface QuoteCardRepository extends JpaRepository<QuoteCard, Long> {
         @Param("keyword") String keyword,
         @Param("bookId") Long bookId,
         @Param("tagName") String tagName
+    );
+
+    @Query("""
+        select q.book.id as bookId, count(q) as quoteCount
+        from QuoteCard q
+        where q.book.user.id = :userId
+          and q.createdAt between :startDateTime and :endDateTime
+        group by q.book.id
+        order by min(q.createdAt) asc
+        """)
+    List<BookQuoteCount> countQuotesByBookInPeriod(
+        @Param("userId") Long userId,
+        @Param("startDateTime") LocalDateTime startDateTime,
+        @Param("endDateTime") LocalDateTime endDateTime
     );
 }

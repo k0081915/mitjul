@@ -12,15 +12,20 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.EntityListeners;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @Entity
 @Table(name = "orders")
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BookOrder {
 
@@ -55,9 +60,48 @@ public class BookOrder {
     @Column(nullable = false, columnDefinition = "json")
     private String snapshotJson;
 
+    @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    private BookOrder(
+        User user,
+        String orderNumber,
+        LocalDate periodStart,
+        LocalDate periodEnd,
+        CoverStyle coverStyle,
+        String ownerName,
+        String snapshotJson
+    ) {
+        this.user = user;
+        this.orderNumber = orderNumber;
+        this.periodStart = periodStart;
+        this.periodEnd = periodEnd;
+        this.coverStyle = coverStyle;
+        this.ownerName = ownerName;
+        this.status = OrderStatus.PENDING;
+        this.snapshotJson = snapshotJson;
+    }
+
+    public static BookOrder create(
+        User user,
+        String orderNumber,
+        LocalDate periodStart,
+        LocalDate periodEnd,
+        CoverStyle coverStyle,
+        String ownerName,
+        String snapshotJson
+    ) {
+        return new BookOrder(user, orderNumber, periodStart, periodEnd, coverStyle, ownerName, snapshotJson);
+    }
+
+    public void updateStatus(OrderStatus status) {
+        if (status != null) {
+            this.status = status;
+        }
+    }
 }

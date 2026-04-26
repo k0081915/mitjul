@@ -37,4 +37,15 @@ public class OrderItem {
 
     @Column(nullable = false)
     private Integer displayOrder;
+
+    private OrderItem(BookOrder order, Book book, Integer quoteCount, Integer displayOrder) {
+        this.order = order;
+        this.book = book;
+        this.quoteCount = quoteCount;
+        this.displayOrder = displayOrder;
+    }
+
+    public static OrderItem create(BookOrder order, Book book, Integer quoteCount, Integer displayOrder) {
+        return new OrderItem(order, book, quoteCount, displayOrder);
+    }
 }
