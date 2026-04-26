@@ -16,9 +16,6 @@ public record BookCreateRequest(
     @Size(max = 100, message = "저자는 100자 이하여야 합니다.")
     String author,
 
-    @Size(max = 20, message = "ISBN은 20자 이하여야 합니다.")
-    String isbn,
-
     @Size(max = 500, message = "표지 이미지 URL은 500자 이하여야 합니다.")
     String coverImageUrl,
 

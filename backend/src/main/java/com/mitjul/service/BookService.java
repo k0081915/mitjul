@@ -52,7 +52,6 @@ public class BookService {
             user,
             request.title(),
             request.author(),
-            request.isbn(),
             request.coverImageUrl(),
             request.presetCoverKey(),
             request.status(),
@@ -74,7 +73,6 @@ public class BookService {
         book.update(
             request.title(),
             request.author(),
-            request.isbn(),
             request.coverImageUrl(),
             request.presetCoverKey(),
             request.status(),

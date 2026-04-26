@@ -43,9 +43,6 @@ public class Book {
     @Column(nullable = false, length = 100)
     private String author;
 
-    @Column(length = 20)
-    private String isbn;
-
     @Column(length = 500)
     private String coverImageUrl;
 
@@ -73,7 +70,6 @@ public class Book {
         User user,
         String title,
         String author,
-        String isbn,
         String coverImageUrl,
         String presetCoverKey,
         BookStatus status,
@@ -83,7 +79,6 @@ public class Book {
         this.user = user;
         this.title = title;
         this.author = author;
-        this.isbn = isbn;
         this.coverImageUrl = coverImageUrl;
         this.presetCoverKey = presetCoverKey;
         this.status = status;
@@ -95,7 +90,6 @@ public class Book {
         User user,
         String title,
         String author,
-        String isbn,
         String coverImageUrl,
         String presetCoverKey,
         BookStatus status,
@@ -106,7 +100,6 @@ public class Book {
             user,
             title,
             author,
-            isbn,
             coverImageUrl,
             presetCoverKey,
             status == null ? BookStatus.READING : status,
@@ -118,7 +111,6 @@ public class Book {
     public void update(
         String title,
         String author,
-        String isbn,
         String coverImageUrl,
         String presetCoverKey,
         BookStatus status,
@@ -130,9 +122,6 @@ public class Book {
         }
         if (author != null) {
             this.author = author;
-        }
-        if (isbn != null) {
-            this.isbn = isbn;
         }
         if (coverImageUrl != null) {
             this.coverImageUrl = coverImageUrl;

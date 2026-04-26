@@ -4,10 +4,13 @@ import com.mitjul.common.error.ApiException;
 import com.mitjul.common.error.ErrorCode;
 import com.mitjul.domain.book.Book;
 import com.mitjul.domain.book.BookRepository;
+import com.mitjul.domain.book.BookStatus;
 import com.mitjul.domain.review.Review;
 import com.mitjul.domain.review.ReviewRepository;
 import com.mitjul.dto.review.ReviewRequest;
 import com.mitjul.dto.review.ReviewResponse;
+import java.time.Clock;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +24,7 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final BookRepository bookRepository;
+    private final Clock clock;
 
     public ReviewResponse getReview(Long bookId) {
         ensureBookExists(bookId);
@@ -42,7 +46,15 @@ public class ReviewService {
                 Review.create(book, request.rating(), request.oneLiner(), request.body())
             ));
 
+        if (Boolean.TRUE.equals(request.markCompleted())) {
+            book.update(null, null, null, null, BookStatus.COMPLETED, null, resolveFinishedAt(book));
+        }
+
         return ReviewResponse.from(review);
+    }
+
+    private LocalDate resolveFinishedAt(Book book) {
+        return book.getFinishedAt() == null ? LocalDate.now(clock) : book.getFinishedAt();
     }
 
     private Book ensureBookExists(Long bookId) {
