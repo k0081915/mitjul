@@ -83,6 +83,14 @@ class OrderServiceTest {
         assertThat(order.items().get(0).displayOrder()).isEqualTo(1);
         assertThat(order.items().get(0).quoteCount()).isEqualTo(2);
         assertThat(order.snapshotJson()).contains("\"ownerName\":\"테스트 사용자\"");
+        assertThat(orderService.getOrders())
+            .singleElement()
+            .satisfies(summary -> {
+                assertThat(summary.id()).isEqualTo(order.id());
+                assertThat(summary.bookCount()).isEqualTo(2);
+                assertThat(summary.quoteCount()).isEqualTo(3);
+            });
+        assertThat(orderService.getOrder(order.id()).items()).hasSize(2);
 
         var updatedOrder = orderService.updateStatus(
             order.id(),

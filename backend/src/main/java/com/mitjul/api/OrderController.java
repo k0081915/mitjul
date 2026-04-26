@@ -4,6 +4,7 @@ import com.mitjul.dto.order.OrderPreviewResponse;
 import com.mitjul.dto.order.OrderRequest;
 import com.mitjul.dto.order.OrderResponse;
 import com.mitjul.dto.order.OrderStatusUpdateRequest;
+import com.mitjul.dto.order.OrderSummaryResponse;
 import com.mitjul.service.OrderService;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -39,7 +40,7 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<OrderResponse> getOrders() {
+    public List<OrderSummaryResponse> getOrders() {
         return orderService.getOrders();
     }
 

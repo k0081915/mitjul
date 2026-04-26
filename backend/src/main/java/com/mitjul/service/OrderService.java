@@ -18,6 +18,7 @@ import com.mitjul.dto.order.OrderPreviewResponse;
 import com.mitjul.dto.order.OrderRequest;
 import com.mitjul.dto.order.OrderResponse;
 import com.mitjul.dto.order.OrderStatusUpdateRequest;
+import com.mitjul.dto.order.OrderSummaryResponse;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,9 +81,9 @@ public class OrderService {
         return OrderResponse.from(order, items);
     }
 
-    public List<OrderResponse> getOrders() {
+    public List<OrderSummaryResponse> getOrders() {
         return bookOrderRepository.findByUserIdOrderByCreatedAtDesc(SEED_USER_ID).stream()
-            .map(order -> OrderResponse.from(order, orderItemRepository.findByOrderIdOrderByDisplayOrderAsc(order.getId())))
+            .map(order -> OrderSummaryResponse.from(order, orderItemRepository.findByOrderIdOrderByDisplayOrderAsc(order.getId())))
             .toList();
     }
 
@@ -135,7 +137,7 @@ public class OrderService {
     }
 
     private List<OrderItem> createOrderItems(BookOrder order, List<OrderBookPreviewResponse> books) {
-        return java.util.stream.IntStream.range(0, books.size())
+        return IntStream.range(0, books.size())
             .mapToObj(index -> {
                 OrderBookPreviewResponse book = books.get(index);
                 return OrderItem.create(
