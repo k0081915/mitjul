@@ -41,6 +41,9 @@ out/
 .env
 .env.*
 
+.agents/
 *.pdf
 PLAN.md
+DESIGN.md
 GOOGLE_FORM_ANSWERS.md
+skills-lock.json
