@@ -73,14 +73,7 @@ public class OrderService {
             toSnapshotJson(preview)
         ));
 
-        List<OrderItem> items = preview.books().stream()
-            .map(book -> OrderItem.create(
-                order,
-                bookRepository.getReferenceById(book.bookId()),
-                book.quoteCount().intValue(),
-                preview.books().indexOf(book) + 1
-            ))
-            .toList();
+        List<OrderItem> items = createOrderItems(order, preview.books());
         orderItemRepository.saveAll(items);
 
         return OrderResponse.from(order, items);
@@ -139,6 +132,20 @@ public class OrderService {
             quoteCount,
             books
         );
+    }
+
+    private List<OrderItem> createOrderItems(BookOrder order, List<OrderBookPreviewResponse> books) {
+        return java.util.stream.IntStream.range(0, books.size())
+            .mapToObj(index -> {
+                OrderBookPreviewResponse book = books.get(index);
+                return OrderItem.create(
+                    order,
+                    bookRepository.getReferenceById(book.bookId()),
+                    book.quoteCount().intValue(),
+                    index + 1
+                );
+            })
+            .toList();
     }
 
     private String generateOrderNumber() {
