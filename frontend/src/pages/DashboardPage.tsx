@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { useDashboardSummary } from '../api/queries'
 
 export function DashboardPage() {
-  const { data, isLoading, isError } = useDashboardSummary(2026, 4)
+  const { data, isLoading, isError } = useDashboardSummary()
 
   return (
     <section className="page-shell">

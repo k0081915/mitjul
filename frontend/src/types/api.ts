@@ -78,4 +78,5 @@ export type ReviewPayload = {
   rating: number
   oneLiner: string
   body: string
+  markCompleted?: boolean
 }

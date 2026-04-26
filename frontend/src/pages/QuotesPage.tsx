@@ -74,7 +74,7 @@ export function QuotesPage() {
             {isLoading && <div className="empty-state">문장을 불러오는 중입니다.</div>}
             {quotes && (
               <div className="card-list">
-                {quotes.slice(0, 8).map((quote) => (
+                {quotes.map((quote) => (
                   <article className="list-card" key={quote.id}>
                     <p className="quote-text">{quote.content}</p>
                     <p className="list-card-meta">{quote.bookTitle}</p>

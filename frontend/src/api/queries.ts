@@ -175,6 +175,8 @@ export function useUpsertReview(bookId: number) {
     mutationFn: (payload: ReviewPayload) => apiRequest<Review>(`/api/books/${bookId}/review`, { method: 'PUT', body: payload }),
     onSuccess: (review) => {
       void queryClient.setQueryData(queryKeys.bookReview(bookId), review)
+      void queryClient.invalidateQueries({ queryKey: queryKeys.book(bookId) })
+      void queryClient.invalidateQueries({ queryKey: ['books'] })
       void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
     },
   })

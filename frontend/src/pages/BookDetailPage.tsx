@@ -9,7 +9,6 @@ import {
   useDeleteQuote,
   useTags,
   useUpdateQuote,
-  useUpdateBook,
   useUpsertReview,
 } from '../api/queries'
 import type { QuoteCard } from '../types/api'
@@ -29,7 +28,6 @@ export function BookDetailPage() {
   const createQuote = useCreateQuote(bookId)
   const updateQuote = useUpdateQuote(bookId)
   const deleteQuote = useDeleteQuote(bookId)
-  const updateBook = useUpdateBook(bookId)
   const upsertReview = useUpsertReview(bookId)
   const [quoteForm, setQuoteForm] = useState(defaultQuoteForm)
   const [editingQuote, setEditingQuote] = useState<QuoteCard | null>(null)
@@ -45,6 +43,10 @@ export function BookDetailPage() {
     event.preventDefault()
     setQuoteMessage(null)
     const payload = toQuotePayload(quoteForm, selectedTags)
+    if (!payload) {
+      setQuoteMessage('페이지는 1 이상의 숫자로 입력해 주세요.')
+      return
+    }
 
     try {
       if (editingQuote) {
@@ -106,13 +108,8 @@ export function BookDetailPage() {
         rating: selectedRating,
         oneLiner: String(formData.get('oneLiner') ?? '').trim(),
         body: String(formData.get('body') ?? '').trim(),
+        markCompleted: formData.get('markCompleted') === 'on',
       })
-      if (formData.get('markCompleted') === 'on' && book?.status !== 'COMPLETED') {
-        await updateBook.mutateAsync({
-          status: 'COMPLETED',
-          finishedAt: book?.finishedAt ?? new Date().toISOString().slice(0, 10),
-        })
-      }
       setReviewMessage('리뷰를 저장했습니다.')
       setIsReviewEditing(false)
     } catch (error) {
@@ -362,12 +359,27 @@ export function BookDetailPage() {
 }
 
 function toQuotePayload(form: typeof defaultQuoteForm, tagNames: string[]) {
+  const page = parsePage(form.page)
+  if (page === undefined) {
+    return null
+  }
+
   return {
-    page: form.page.trim() === '' ? null : Number(form.page),
+    page,
     content: form.content.trim(),
     memo: nullable(form.memo),
     tagNames,
   }
+}
+
+function parsePage(value: string) {
+  const trimmed = value.trim()
+  if (trimmed === '') {
+    return null
+  }
+
+  const page = Number(trimmed)
+  return Number.isInteger(page) && page > 0 ? page : undefined
 }
 
 function toggleTag(tags: string[], tagName: string) {

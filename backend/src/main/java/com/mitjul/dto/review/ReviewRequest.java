@@ -17,6 +17,8 @@ public record ReviewRequest(
     String oneLiner,
 
     @NotBlank(message = "리뷰 본문은 필수입니다.")
-    String body
+    String body,
+
+    Boolean markCompleted
 ) {
 }
