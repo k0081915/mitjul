@@ -4,6 +4,7 @@ const navItems = [
   { to: '/', label: '회고 홈', end: true },
   { to: '/books', label: '내 책장' },
   { to: '/quotes', label: '문장 모음' },
+  { to: '/orders', label: '기록책 주문' },
 ]
 
 function App() {

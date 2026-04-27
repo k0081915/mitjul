@@ -6,6 +6,11 @@ import type {
   BookStatus,
   BookUpdatePayload,
   DashboardSummary,
+  Order,
+  OrderPayload,
+  OrderPreview,
+  OrderStatus,
+  OrderSummary,
   QuoteCard,
   QuotePayload,
   Review,
@@ -21,6 +26,8 @@ export const queryKeys = {
   quoteSearch: (params: QuoteSearchParams) => ['quoteSearch', params] as const,
   tags: () => ['tags'] as const,
   dashboard: (year?: number, month?: number) => ['dashboard', year, month] as const,
+  orders: () => ['orders'] as const,
+  order: (orderId: number) => ['order', orderId] as const,
 }
 
 export type QuoteSearchParams = {
@@ -91,6 +98,49 @@ export function useDashboardSummary(year?: number, month?: number) {
   return useQuery({
     queryKey: queryKeys.dashboard(year, month),
     queryFn: () => apiRequest<DashboardSummary>(`/api/dashboard/summary${toSearchParams({ year, month })}`),
+  })
+}
+
+export function useOrders() {
+  return useQuery({
+    queryKey: queryKeys.orders(),
+    queryFn: () => apiRequest<OrderSummary[]>('/api/orders'),
+  })
+}
+
+export function useOrder(orderId: number) {
+  return useQuery({
+    queryKey: queryKeys.order(orderId),
+    queryFn: () => apiRequest<Order>(`/api/orders/${orderId}`),
+    enabled: Number.isFinite(orderId),
+  })
+}
+
+export function useOrderPreview() {
+  return useMutation({
+    mutationFn: (payload: OrderPayload) => apiRequest<OrderPreview>('/api/orders/preview', { method: 'POST', body: payload }),
+  })
+}
+
+export function useCreateOrder() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (payload: OrderPayload) => apiRequest<Order>('/api/orders', { method: 'POST', body: payload }),
+    onSuccess: (order) => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.orders() })
+      void queryClient.setQueryData(queryKeys.order(order.id), order)
+    },
+  })
+}
+
+export function useUpdateOrderStatus(orderId: number) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (status: OrderStatus) => apiRequest<Order>(`/api/orders/${orderId}/status`, { method: 'PATCH', body: { status } }),
+    onSuccess: (order) => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.orders() })
+      void queryClient.setQueryData(queryKeys.order(order.id), order)
+    },
   })
 }
 
