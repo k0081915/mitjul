@@ -23,10 +23,11 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -65,15 +66,16 @@ public class OrderService {
             throw new ApiException(ErrorCode.BAD_REQUEST, "주문에 포함할 인용문이 없습니다.");
         }
 
-        BookOrder order = bookOrderRepository.save(BookOrder.create(
+        BookOrder order = bookOrderRepository.saveAndFlush(BookOrder.create(
             user,
-            generateOrderNumber(),
+            generateTemporaryOrderNumber(),
             request.periodStart(),
             request.periodEnd(),
             request.coverStyle(),
             request.ownerName(),
             toSnapshotJson(preview)
         ));
+        order.assignOrderNumber(generateOrderNumber(order.getId()));
 
         List<OrderItem> items = createOrderItems(order, preview.books());
         orderItemRepository.saveAll(items);
@@ -82,8 +84,11 @@ public class OrderService {
     }
 
     public List<OrderSummaryResponse> getOrders() {
-        return bookOrderRepository.findByUserIdOrderByCreatedAtDesc(SEED_USER_ID).stream()
-            .map(order -> OrderSummaryResponse.from(order, orderItemRepository.findByOrderIdOrderByDisplayOrderAsc(order.getId())))
+        List<BookOrder> orders = bookOrderRepository.findByUserIdOrderByCreatedAtDesc(SEED_USER_ID);
+        Map<Long, List<OrderItem>> itemsByOrderId = findItemsByOrderId(orders);
+
+        return orders.stream()
+            .map(order -> OrderSummaryResponse.from(order, itemsByOrderId.getOrDefault(order.getId(), List.of())))
             .toList();
     }
 
@@ -114,12 +119,23 @@ public class OrderService {
                 (left, right) -> left,
                 LinkedHashMap::new
             ));
+        if (quoteCountByBookId.isEmpty()) {
+            return new OrderPreviewResponse(
+                request.periodStart(),
+                request.periodEnd(),
+                request.coverStyle(),
+                request.ownerName(),
+                0,
+                0,
+                List.of()
+            );
+        }
+
         Map<Long, Book> bookById = bookRepository.findByUserIdAndIdIn(SEED_USER_ID, quoteCountByBookId.keySet().stream().toList())
             .stream()
             .collect(Collectors.toMap(Book::getId, Function.identity()));
         List<OrderBookPreviewResponse> books = quoteCountByBookId.entrySet().stream()
             .map(entry -> OrderBookPreviewResponse.of(bookById.get(entry.getKey()), entry.getValue()))
-            .sorted(Comparator.comparing(OrderBookPreviewResponse::bookId))
             .toList();
         long quoteCount = books.stream()
             .mapToLong(OrderBookPreviewResponse::quoteCount)
@@ -150,12 +166,29 @@ public class OrderService {
             .toList();
     }
 
-    private String generateOrderNumber() {
+    private Map<Long, List<OrderItem>> findItemsByOrderId(List<BookOrder> orders) {
+        if (orders.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        List<Long> orderIds = orders.stream()
+            .map(BookOrder::getId)
+            .toList();
+        return orderItemRepository.findByOrderIdsOrderByDisplayOrderAsc(orderIds).stream()
+            .collect(Collectors.groupingBy(
+                item -> item.getOrder().getId(),
+                LinkedHashMap::new,
+                Collectors.toList()
+            ));
+    }
+
+    private String generateTemporaryOrderNumber() {
+        return "TMP-" + UUID.randomUUID().toString().replace("-", "").substring(0, 16);
+    }
+
+    private String generateOrderNumber(Long orderId) {
         LocalDate today = LocalDate.now(clock);
-        LocalDateTime startAt = today.atStartOfDay();
-        LocalDateTime endAt = today.atTime(LocalTime.MAX);
-        long sequence = bookOrderRepository.countByCreatedAtBetween(startAt, endAt) + 1;
-        return "MJ-" + today.toString().replace("-", "") + "-" + String.format("%04d", sequence);
+        return "MJ-" + today.toString().replace("-", "") + "-" + String.format("%04d", orderId);
     }
 
     private String toSnapshotJson(OrderPreviewResponse preview) {

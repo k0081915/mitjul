@@ -104,4 +104,8 @@ public class BookOrder {
             this.status = status;
         }
     }
+
+    public void assignOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
+    }
 }
