@@ -62,4 +62,21 @@ public interface QuoteCardRepository extends JpaRepository<QuoteCard, Long> {
         @Param("startDateTime") LocalDateTime startDateTime,
         @Param("endDateTime") LocalDateTime endDateTime
     );
+
+    @Query("""
+        select distinct q
+        from QuoteCard q
+        join fetch q.book b
+        left join fetch q.tags t
+        where b.user.id = :userId
+          and b.id in :bookIds
+          and q.createdAt between :startDateTime and :endDateTime
+        order by q.createdAt asc
+        """)
+    List<QuoteCard> findSnapshotQuotesByBookIdsInPeriod(
+        @Param("userId") Long userId,
+        @Param("bookIds") List<Long> bookIds,
+        @Param("startDateTime") LocalDateTime startDateTime,
+        @Param("endDateTime") LocalDateTime endDateTime
+    );
 }

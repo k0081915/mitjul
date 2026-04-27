@@ -15,6 +15,7 @@ import com.mitjul.domain.user.User;
 import com.mitjul.domain.user.UserRepository;
 import com.mitjul.dto.order.OrderBookPreviewResponse;
 import com.mitjul.dto.order.OrderPreviewResponse;
+import com.mitjul.dto.order.OrderQuoteSnapshotResponse;
 import com.mitjul.dto.order.OrderRequest;
 import com.mitjul.dto.order.OrderResponse;
 import com.mitjul.dto.order.OrderStatusUpdateRequest;
@@ -134,8 +135,17 @@ public class OrderService {
         Map<Long, Book> bookById = bookRepository.findByUserIdAndIdIn(SEED_USER_ID, quoteCountByBookId.keySet().stream().toList())
             .stream()
             .collect(Collectors.toMap(Book::getId, Function.identity()));
+        Map<Long, List<OrderQuoteSnapshotResponse>> quotesByBookId = findSnapshotQuotesByBookId(
+            quoteCountByBookId.keySet().stream().toList(),
+            startAt,
+            endAt
+        );
         List<OrderBookPreviewResponse> books = quoteCountByBookId.entrySet().stream()
-            .map(entry -> OrderBookPreviewResponse.of(bookById.get(entry.getKey()), entry.getValue()))
+            .map(entry -> OrderBookPreviewResponse.of(
+                bookById.get(entry.getKey()),
+                entry.getValue(),
+                quotesByBookId.getOrDefault(entry.getKey(), List.of())
+            ))
             .toList();
         long quoteCount = books.stream()
             .mapToLong(OrderBookPreviewResponse::quoteCount)
@@ -150,6 +160,24 @@ public class OrderService {
             quoteCount,
             books
         );
+    }
+
+    private Map<Long, List<OrderQuoteSnapshotResponse>> findSnapshotQuotesByBookId(
+        List<Long> bookIds,
+        LocalDateTime startAt,
+        LocalDateTime endAt
+    ) {
+        if (bookIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        return quoteCardRepository.findSnapshotQuotesByBookIdsInPeriod(SEED_USER_ID, bookIds, startAt, endAt)
+            .stream()
+            .collect(Collectors.groupingBy(
+                quote -> quote.getBook().getId(),
+                LinkedHashMap::new,
+                Collectors.mapping(OrderQuoteSnapshotResponse::from, Collectors.toList())
+            ));
     }
 
     private List<OrderItem> createOrderItems(BookOrder order, List<OrderBookPreviewResponse> books) {

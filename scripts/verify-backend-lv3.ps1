@@ -61,6 +61,8 @@ Assert-True ($export.exportedAt -ne $null) "ExportedAt should not be null"
 Assert-True ($export.snapshot.ownerName -eq "Lv3 검증 사용자") "Snapshot ownerName should match"
 Assert-True ($export.snapshot.bookCount -ge 1) "Snapshot should include at least one book"
 Assert-True ($export.snapshot.quoteCount -ge 1) "Snapshot should include at least one quote"
+Assert-True ($export.snapshot.books[0].quotes.Count -ge 1) "Snapshot book should include quote details"
+Assert-True ($export.snapshot.books[0].quotes[0].content -ne $null) "Snapshot quote should include content"
 
 Write-Step "Checking missing order export"
 $missingFailed = $false
