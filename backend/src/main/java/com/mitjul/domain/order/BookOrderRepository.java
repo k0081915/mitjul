@@ -8,5 +8,7 @@ public interface BookOrderRepository extends JpaRepository<BookOrder, Long> {
 
     List<BookOrder> findByUserIdOrderByCreatedAtDesc(Long userId);
 
+    Optional<BookOrder> findByIdAndUserId(Long id, Long userId);
+
     Optional<BookOrder> findByOrderNumber(String orderNumber);
 }
