@@ -1,10 +1,27 @@
+import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { useOrder } from '../api/queries'
+import { ApiError } from '../api/client'
+import { useOrder, useUpdateOrderStatus } from '../api/queries'
 import type { OrderStatus } from '../types/api'
 
 export function OrderDetailPage() {
   const orderId = Number(useParams().orderId)
   const { data: order, isLoading, isError } = useOrder(orderId)
+  const updateOrderStatus = useUpdateOrderStatus(orderId)
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false)
+  const [message, setMessage] = useState<string | null>(null)
+  const canCancelOrder = order?.status === 'PENDING' || order?.status === 'PROCESSING'
+
+  const confirmCancelOrder = async () => {
+    setMessage(null)
+    try {
+      await updateOrderStatus.mutateAsync('CANCELLED')
+      setIsCancelModalOpen(false)
+      setMessage('주문을 취소했습니다.')
+    } catch (error) {
+      setMessage(getErrorMessage(error))
+    }
+  }
 
   return (
     <section className="page-shell">
@@ -99,12 +116,36 @@ export function OrderDetailPage() {
                       <dd>{formatDateTime(order.updatedAt)}</dd>
                     </div>
                   </dl>
+                  <div className="card-actions">
+                    {canCancelOrder && (
+                      <button className="button-danger" type="button" onClick={() => setIsCancelModalOpen(true)}>
+                        주문 취소
+                      </button>
+                    )}
+                    {message && <p className="form-message">{message}</p>}
+                  </div>
                 </div>
               </aside>
             </div>
           )}
         </div>
       </div>
+      {isCancelModalOpen && order && (
+        <div className="modal-backdrop" role="presentation">
+          <div aria-labelledby="cancel-order-title" aria-modal="true" className="confirm-dialog" role="dialog">
+            <h2 id="cancel-order-title">주문을 취소할까요?</h2>
+            <p>{order.orderNumber} 기록책 주문 상태가 취소로 변경됩니다.</p>
+            <div className="modal-actions">
+              <button className="button-secondary" type="button" onClick={() => setIsCancelModalOpen(false)}>
+                닫기
+              </button>
+              <button className="button-danger filled" disabled={updateOrderStatus.isPending} type="button" onClick={confirmCancelOrder}>
+                취소하기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }
@@ -133,4 +174,11 @@ function formatDateTime(value: string) {
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(new Date(value))
+}
+
+function getErrorMessage(error: unknown) {
+  if (error instanceof ApiError) {
+    return error.message
+  }
+  return '요청 처리 중 오류가 발생했습니다.'
 }
