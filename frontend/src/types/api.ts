@@ -95,6 +95,16 @@ export type OrderBookPreview = {
   title: string
   author: string
   quoteCount: number
+  quotes: OrderQuoteSnapshot[]
+}
+
+export type OrderQuoteSnapshot = {
+  id: number
+  page?: number | null
+  content: string
+  memo?: string | null
+  tags: string[]
+  createdAt: string
 }
 
 export type OrderPreview = {
