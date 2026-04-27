@@ -131,7 +131,7 @@ export function BookDetailPage() {
               </Link>
             </div>
           </div>
-          <div className="hero-object" aria-hidden="true">
+          <div className="hero-object hero-object-detail" aria-hidden="true">
             <div className="book-stack">
               <div className="book-slab tertiary">
                 <strong>Memo</strong>
@@ -220,9 +220,7 @@ export function BookDetailPage() {
             {quotes && quotes.length > 0 && (
               <div className="card-list">
                 {quotes.map((quote) => (
-                  <article className="list-card" key={quote.id}>
-                    <p className="quote-text">{quote.content}</p>
-                    {quote.memo && <p>{quote.memo}</p>}
+                  <article className="list-card quote-card" key={quote.id}>
                     <div className="tag-row">
                       {quote.tags.map((tag) => (
                         <span className="badge" key={tag}>
@@ -230,6 +228,10 @@ export function BookDetailPage() {
                         </span>
                       ))}
                     </div>
+                    <p className="quote-text">{quote.content}</p>
+                    {quote.memo && <p className="quote-memo">{quote.memo}</p>}
+                    <div className="quote-card-divider" />
+                    <p className="list-card-meta">최근 수정 {formatDate(quote.updatedAt)}</p>
                     <div className="card-actions">
                       <button className="button-secondary" type="button" onClick={(event) => startQuoteEdit(event, quote)}>
                         수정
@@ -271,6 +273,7 @@ export function BookDetailPage() {
                     </span>
                   ))}
                 </div>
+                <p className="list-card-meta">최근 수정 {formatDate(review.updatedAt)}</p>
                 <h3>{review.oneLiner}</h3>
                 <p>{review.body}</p>
               </article>
@@ -395,6 +398,14 @@ function toggleTag(tags: string[], tagName: string) {
 function nullable(value: string) {
   const trimmed = value.trim()
   return trimmed === '' ? null : trimmed
+}
+
+function formatDate(value: string) {
+  return new Intl.DateTimeFormat('ko-KR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(new Date(value))
 }
 
 function getErrorMessage(error: unknown) {

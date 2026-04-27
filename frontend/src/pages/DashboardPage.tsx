@@ -21,7 +21,7 @@ export function DashboardPage() {
               </Link>
             </div>
           </div>
-          <div className="hero-object" aria-hidden="true">
+          <div className="hero-object hero-object-dashboard" aria-hidden="true">
             <div className="book-stack">
               <div className="book-slab secondary">
                 <strong>Read</strong>
@@ -58,7 +58,7 @@ export function DashboardPage() {
               </div>
               <div className="panel">
                 <h2>작성한 리뷰</h2>
-                <p>완독 후 남긴 기록</p>
+                <p>책에 남긴 감상 기록</p>
                 <span className="metric-value">{data.reviewCount}</span>
               </div>
             </div>

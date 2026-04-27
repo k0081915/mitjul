@@ -75,9 +75,20 @@ export function QuotesPage() {
             {quotes && (
               <div className="card-list">
                 {quotes.map((quote) => (
-                  <article className="list-card" key={quote.id}>
+                  <article className="list-card quote-card" key={quote.id}>
+                    <div className="tag-row">
+                      {quote.tags.map((tag) => (
+                        <span className="badge" key={tag}>
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                     <p className="quote-text">{quote.content}</p>
-                    <p className="list-card-meta">{quote.bookTitle}</p>
+                    {quote.memo && <p className="quote-memo">{quote.memo}</p>}
+                    <div className="quote-card-divider" />
+                    <p className="list-card-meta">
+                      {quote.bookTitle} · 최근 수정 {formatDate(quote.updatedAt)}
+                    </p>
                   </article>
                 ))}
               </div>
@@ -100,4 +111,12 @@ export function QuotesPage() {
       </div>
     </section>
   )
+}
+
+function formatDate(value: string) {
+  return new Intl.DateTimeFormat('ko-KR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(new Date(value))
 }

@@ -327,6 +327,60 @@ button:focus-visible {
   background: rgba(255, 255, 255, 0.14);
 }
 
+.hero-object-library .book-slab.primary {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0 14px, transparent 14px),
+    linear-gradient(135deg, #101a17 0%, #315447 100%);
+}
+
+.hero-object-library .book-slab.secondary {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0 14px, transparent 14px),
+    linear-gradient(135deg, #283832 0%, #6c7f72 100%);
+}
+
+.hero-object-library .book-slab.tertiary {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 14px, transparent 14px),
+    linear-gradient(135deg, #202727 0%, #43504f 100%);
+}
+
+.hero-object-detail .book-slab.primary {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0 14px, transparent 14px),
+    linear-gradient(135deg, #211815 0%, #4d372e 100%);
+}
+
+.hero-object-detail .book-slab.secondary {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0 14px, transparent 14px),
+    linear-gradient(135deg, #352b25 0%, #7d6a5c 100%);
+}
+
+.hero-object-detail .book-slab.tertiary {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 14px, transparent 14px),
+    linear-gradient(135deg, #28221d 0%, #4d4942 100%);
+}
+
+.hero-object-orders .book-slab.primary {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0 14px, transparent 14px),
+    linear-gradient(135deg, #20141a 0%, #563044 100%);
+}
+
+.hero-object-orders .book-slab.secondary {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0 14px, transparent 14px),
+    linear-gradient(135deg, #33252c 0%, #76626c 100%);
+}
+
+.hero-object-orders .book-slab.tertiary {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 14px, transparent 14px),
+    linear-gradient(135deg, #232027 0%, #494756 100%);
+}
+
 .page-kicker {
   margin: 0 0 10px;
   color: var(--sk-text-tertiary);
@@ -485,6 +539,10 @@ button:focus-visible {
   gap: 12px;
 }
 
+.form-heading > div {
+  min-width: 0;
+}
+
 .form-heading p,
 .form-message {
   margin: 8px 0 0;
@@ -597,6 +655,7 @@ button:focus-visible {
 
 .button-secondary,
 .button-danger {
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -610,6 +669,7 @@ button:focus-visible {
   font-size: 13px;
   line-height: 1.29;
   letter-spacing: -0.224px;
+  white-space: nowrap;
 }
 
 .button-danger {
@@ -843,6 +903,28 @@ button:focus-visible {
   font-weight: 400;
   line-height: 1.19;
   letter-spacing: 0.231px;
+}
+
+.quote-card {
+  gap: 18px;
+}
+
+.quote-card .tag-row {
+  margin-top: 0;
+}
+
+.quote-memo {
+  margin: 0;
+  color: var(--sk-text-secondary);
+  font-size: 15px;
+  line-height: 1.47;
+  letter-spacing: -0.224px;
+}
+
+.quote-card-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.12);
 }
 
 .tag-row {

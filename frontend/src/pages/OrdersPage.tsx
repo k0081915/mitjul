@@ -78,7 +78,7 @@ export function OrdersPage() {
             <h1 className="page-title">기록책 주문.</h1>
             <p className="page-description">기간을 고르면 남긴 문장을 책 단위로 묶어 기록책 제작 요청을 만듭니다.</p>
           </div>
-          <div className="hero-object" aria-hidden="true">
+          <div className="hero-object hero-object-orders" aria-hidden="true">
             <div className="book-stack">
               <div className="book-slab secondary">
                 <strong>Period</strong>

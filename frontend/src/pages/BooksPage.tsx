@@ -101,7 +101,7 @@ export function BooksPage() {
             <h1 className="page-title">내 책장.</h1>
             <p className="page-description">읽는 중인 책과 완독한 책을 한 곳에서 확인합니다.</p>
           </div>
-          <div className="hero-object" aria-hidden="true">
+          <div className="hero-object hero-object-library" aria-hidden="true">
             <div className="book-stack">
               <div className="book-slab secondary">
                 <strong>Reading</strong>
@@ -205,7 +205,7 @@ export function BooksPage() {
                 >
                   <div className={`book-tile-cover ${getCoverPresetClass(book)}`} aria-hidden="true" />
                   <div>
-                    <p className="page-kicker">{book.status}</p>
+                    <p className="page-kicker">{getBookStatusLabel(book.status)}</p>
                     <h2>{book.title}</h2>
                     <p>{book.author}</p>
                     <p>
@@ -265,6 +265,15 @@ function toBookPayload(form: typeof defaultBookForm): BookPayload {
 function nullable(value: string) {
   const trimmed = value.trim()
   return trimmed === '' ? null : trimmed
+}
+
+function getBookStatusLabel(status: BookStatus) {
+  const labels: Record<BookStatus, string> = {
+    READING: '읽는 중',
+    COMPLETED: '완독',
+    PAUSED: '잠시 멈춤',
+  }
+  return labels[status]
 }
 
 function getErrorMessage(error: unknown) {
