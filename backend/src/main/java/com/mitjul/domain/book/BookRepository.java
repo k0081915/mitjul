@@ -12,6 +12,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     List<Book> findByUserIdAndStatusOrderByCreatedAtDesc(Long userId, BookStatus status);
 
+    List<Book> findByUserIdAndIdIn(Long userId, List<Long> ids);
+
     long countByUserIdAndStatusAndFinishedAtBetween(
         Long userId,
         BookStatus status,
