@@ -19,11 +19,22 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
+@Sql(statements = {
+    "SET REFERENTIAL_INTEGRITY FALSE",
+    "TRUNCATE TABLE quote_card_tags RESTART IDENTITY",
+    "TRUNCATE TABLE order_items RESTART IDENTITY",
+    "TRUNCATE TABLE orders RESTART IDENTITY",
+    "TRUNCATE TABLE reviews RESTART IDENTITY",
+    "TRUNCATE TABLE quote_cards RESTART IDENTITY",
+    "TRUNCATE TABLE tags RESTART IDENTITY",
+    "TRUNCATE TABLE books RESTART IDENTITY",
+    "TRUNCATE TABLE users RESTART IDENTITY",
+    "SET REFERENTIAL_INTEGRITY TRUE"
+})
 @Transactional
 class OrderExportServiceTest {
 

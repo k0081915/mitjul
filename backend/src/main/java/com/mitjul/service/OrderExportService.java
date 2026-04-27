@@ -11,9 +11,11 @@ import com.mitjul.dto.order.OrderExportResponse;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -38,12 +40,14 @@ public class OrderExportService {
 
     private JsonNode readSnapshot(BookOrder order) {
         if (order.getSnapshotJson() == null || order.getSnapshotJson().isBlank()) {
+            log.error("Order snapshot is blank. orderId={}", order.getId());
             throw new ApiException(ErrorCode.INTERNAL_SERVER_ERROR, "주문 스냅샷을 읽을 수 없습니다.");
         }
 
         try {
             return objectMapper.readTree(order.getSnapshotJson());
         } catch (JsonProcessingException exception) {
+            log.error("Failed to parse order snapshot. orderId={}", order.getId(), exception);
             throw new ApiException(ErrorCode.INTERNAL_SERVER_ERROR, "주문 스냅샷을 읽을 수 없습니다.");
         }
     }
