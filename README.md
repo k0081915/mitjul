@@ -205,6 +205,16 @@ mitjul/
 | `/orders` | 기록책 주문 | 주문 미리보기, 주문 생성, 주문 목록 |
 | `/orders/:orderId` | 주문 상세 | 주문 정보, 포함 책 목록, JSON 다운로드, 주문 취소 |
 
+### 화면 미리보기
+
+| 회고 홈 | 내 책장 |
+|---|---|
+| ![회고 홈](docs/screenshots/home.png) | ![내 책장](docs/screenshots/books.png) |
+
+| 책 상세 | 기록책 주문 |
+|---|---|
+| ![책 상세](docs/screenshots/book-detail.png) | ![기록책 주문](docs/screenshots/orders.png) |
+
 ## 8. API 요약
 
 | 구분 | 메서드/경로 | 설명 |
