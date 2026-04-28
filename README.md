@@ -25,6 +25,16 @@
 - 주문 취소와 주문 상태 확인
 - 주문 1건에 필요한 콘텐츠와 메타데이터를 JSON으로 내보내기
 
+### 화면 미리보기
+
+| 회고 홈 | 내 책장 |
+|---|---|
+| ![회고 홈](docs/screenshots/home.png) | ![내 책장](docs/screenshots/books.png) |
+
+| 책 상세 | 기록책 주문 |
+|---|---|
+| ![책 상세](docs/screenshots/book-detail.png) | ![기록책 주문](docs/screenshots/orders.png) |
+
 ## 2. 실행 방법 (Docker)
 
 ```powershell
@@ -204,16 +214,6 @@ mitjul/
 | `/quotes` | 문장 모음 | 전체 인용문 검색, 태그 필터 |
 | `/orders` | 기록책 주문 | 주문 미리보기, 주문 생성, 주문 목록 |
 | `/orders/:orderId` | 주문 상세 | 주문 정보, 포함 책 목록, JSON 다운로드, 주문 취소 |
-
-### 화면 미리보기
-
-| 회고 홈 | 내 책장 |
-|---|---|
-| ![회고 홈](docs/screenshots/home.png) | ![내 책장](docs/screenshots/books.png) |
-
-| 책 상세 | 기록책 주문 |
-|---|---|
-| ![책 상세](docs/screenshots/book-detail.png) | ![기록책 주문](docs/screenshots/orders.png) |
 
 ## 8. API 요약
 
