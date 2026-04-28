@@ -1,5 +1,6 @@
 import { type FormEvent, useState } from 'react'
 import { useQuoteSearch, useTags } from '../api/queries'
+import { formatDisplayDate } from '../utils/date'
 
 export function QuotesPage() {
   const [keywordInput, setKeywordInput] = useState('')
@@ -87,7 +88,7 @@ export function QuotesPage() {
                     {quote.memo && <p className="quote-memo">{quote.memo}</p>}
                     <div className="quote-card-divider" />
                     <p className="list-card-meta">
-                      {quote.bookTitle} · 최근 수정 {formatDate(quote.updatedAt)}
+                      {quote.bookTitle} · 최근 수정 {formatDisplayDate(quote.updatedAt)}
                     </p>
                   </article>
                 ))}
@@ -111,12 +112,4 @@ export function QuotesPage() {
       </div>
     </section>
   )
-}
-
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(new Date(value))
 }

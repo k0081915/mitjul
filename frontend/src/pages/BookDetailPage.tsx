@@ -12,6 +12,7 @@ import {
   useUpsertReview,
 } from '../api/queries'
 import type { QuoteCard } from '../types/api'
+import { formatDisplayDate } from '../utils/date'
 
 const defaultQuoteForm = {
   page: '',
@@ -231,7 +232,7 @@ export function BookDetailPage() {
                     <p className="quote-text">{quote.content}</p>
                     {quote.memo && <p className="quote-memo">{quote.memo}</p>}
                     <div className="quote-card-divider" />
-                    <p className="list-card-meta">최근 수정 {formatDate(quote.updatedAt)}</p>
+                    <p className="list-card-meta">최근 수정 {formatDisplayDate(quote.updatedAt)}</p>
                     <div className="card-actions">
                       <button className="button-secondary" type="button" onClick={(event) => startQuoteEdit(event, quote)}>
                         수정
@@ -273,7 +274,7 @@ export function BookDetailPage() {
                     </span>
                   ))}
                 </div>
-                <p className="list-card-meta">최근 수정 {formatDate(review.updatedAt)}</p>
+                <p className="list-card-meta">최근 수정 {formatDisplayDate(review.updatedAt)}</p>
                 <h3>{review.oneLiner}</h3>
                 <p>{review.body}</p>
               </article>
@@ -398,14 +399,6 @@ function toggleTag(tags: string[], tagName: string) {
 function nullable(value: string) {
   const trimmed = value.trim()
   return trimmed === '' ? null : trimmed
-}
-
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(new Date(value))
 }
 
 function getErrorMessage(error: unknown) {
