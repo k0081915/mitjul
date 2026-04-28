@@ -39,11 +39,9 @@ out/
 
 ### .env ##
 .env
-.env.*
 
-.agents/
+### Personal ###
 *.pdf
 PLAN.md
-DESIGN.md
 GOOGLE_FORM_ANSWERS.md
 skills-lock.json
