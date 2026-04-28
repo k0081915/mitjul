@@ -1,5 +1,6 @@
 import { type FormEvent, useState } from 'react'
 import { useQuoteSearch, useTags } from '../api/queries'
+import { formatDisplayDate } from '../utils/date'
 
 export function QuotesPage() {
   const [keywordInput, setKeywordInput] = useState('')
@@ -75,9 +76,20 @@ export function QuotesPage() {
             {quotes && (
               <div className="card-list">
                 {quotes.map((quote) => (
-                  <article className="list-card" key={quote.id}>
+                  <article className="list-card quote-card" key={quote.id}>
+                    <div className="tag-row">
+                      {quote.tags.map((tag) => (
+                        <span className="badge" key={tag}>
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                     <p className="quote-text">{quote.content}</p>
-                    <p className="list-card-meta">{quote.bookTitle}</p>
+                    {quote.memo && <p className="quote-memo">{quote.memo}</p>}
+                    <div className="quote-card-divider" />
+                    <p className="list-card-meta">
+                      {quote.bookTitle} · 최근 수정 {formatDisplayDate(quote.updatedAt)}
+                    </p>
                   </article>
                 ))}
               </div>

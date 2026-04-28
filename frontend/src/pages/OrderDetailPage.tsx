@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ApiError } from '../api/client'
+import { ApiError, downloadJsonFile } from '../api/client'
 import { useOrder, useUpdateOrderStatus } from '../api/queries'
 import type { OrderStatus } from '../types/api'
 
@@ -9,6 +9,7 @@ export function OrderDetailPage() {
   const { data: order, isLoading, isError } = useOrder(orderId)
   const updateOrderStatus = useUpdateOrderStatus(orderId)
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const canCancelOrder = order?.status === 'PENDING' || order?.status === 'PROCESSING'
 
@@ -20,6 +21,23 @@ export function OrderDetailPage() {
       setMessage('주문을 취소했습니다.')
     } catch (error) {
       setMessage(getErrorMessage(error))
+    }
+  }
+
+  const downloadOrderJson = async () => {
+    if (!order) {
+      return
+    }
+
+    setMessage(null)
+    setIsDownloading(true)
+    try {
+      const filename = await downloadJsonFile(`/api/orders/${order.id}/export/json`, `mitjul-order-${order.orderNumber}.json`)
+      setMessage(`${filename} 파일을 다운로드했습니다.`)
+    } catch (error) {
+      setMessage(getErrorMessage(error))
+    } finally {
+      setIsDownloading(false)
     }
   }
 
@@ -41,7 +59,7 @@ export function OrderDetailPage() {
               </Link>
             </div>
           </div>
-          <div className="hero-object" aria-hidden="true">
+          <div className="hero-object hero-object-orders" aria-hidden="true">
             <div className="book-stack">
               <div className="book-slab secondary">
                 <strong>Snapshot</strong>
@@ -117,6 +135,9 @@ export function OrderDetailPage() {
                     </div>
                   </dl>
                   <div className="card-actions">
+                    <button className="cta-link" disabled={isDownloading} type="button" onClick={downloadOrderJson}>
+                      {isDownloading ? '다운로드 중' : 'JSON 다운로드'}
+                    </button>
                     {canCancelOrder && (
                       <button className="button-danger" type="button" onClick={() => setIsCancelModalOpen(true)}>
                         주문 취소

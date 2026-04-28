@@ -53,11 +53,7 @@ public class DashboardService {
             monthStartAt,
             monthEndAt
         );
-        long reviewCount = reviewRepository.countByBookUserIdAndCreatedAtBetween(
-            SEED_USER_ID,
-            monthStartAt,
-            monthEndAt
-        );
+        long reviewCount = reviewRepository.countByBookUserId(SEED_USER_ID);
 
         return new DashboardSummaryResponse(
             targetMonth.getYear(),

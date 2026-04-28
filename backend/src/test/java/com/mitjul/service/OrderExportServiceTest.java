@@ -84,6 +84,10 @@ class OrderExportServiceTest {
         assertThat(export.snapshot().get("bookCount").asLong()).isEqualTo(1);
         assertThat(export.snapshot().get("quoteCount").asLong()).isEqualTo(1);
         assertThat(export.snapshot().get("books").get(0).get("title").asText()).isEqualTo("스냅샷 테스트 책");
+        assertThat(export.snapshot().get("books").get(0).get("quotes").get(0).get("content").asText())
+            .isEqualTo("스냅샷에 남길 문장");
+        assertThat(export.snapshot().get("books").get(0).get("quotes").get(0).get("memo").asText())
+            .isEqualTo("주문 당시 메모");
     }
 
     @Test

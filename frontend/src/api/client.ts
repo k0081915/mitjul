@@ -44,6 +44,33 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
   return response.json() as Promise<T>
 }
 
+export async function downloadJsonFile(path: string, fallbackFilename: string): Promise<string> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    headers: {
+      Accept: 'application/json',
+    },
+  })
+
+  if (!response.ok) {
+    const errorBody = await readErrorBody(response)
+    throw new ApiError(response.status, errorBody.message, errorBody.code)
+  }
+
+  const blob = await response.blob()
+  const filename = getFilenameFromDisposition(response.headers.get('Content-Disposition')) ?? fallbackFilename
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+  URL.revokeObjectURL(url)
+
+  return filename
+}
+
 async function readErrorBody(response: Response): Promise<{ code?: string; message: string }> {
   try {
     const body = (await response.json()) as { code?: string; message?: string }
@@ -54,4 +81,17 @@ async function readErrorBody(response: Response): Promise<{ code?: string; messa
   } catch {
     return { message: '요청 처리 중 오류가 발생했습니다.' }
   }
+}
+
+function getFilenameFromDisposition(disposition: string | null) {
+  if (!disposition) {
+    return null
+  }
+
+  const encodedFilename = disposition.match(/filename\*=UTF-8''([^;]+)/i)?.[1]
+  if (encodedFilename) {
+    return decodeURIComponent(encodedFilename)
+  }
+
+  return disposition.match(/filename="?([^";]+)"?/i)?.[1] ?? null
 }

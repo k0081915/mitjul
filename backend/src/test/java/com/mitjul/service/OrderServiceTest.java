@@ -87,6 +87,9 @@ class OrderServiceTest {
 
         assertThat(preview.bookCount()).isEqualTo(2);
         assertThat(preview.quoteCount()).isEqualTo(3);
+        assertThat(preview.books().get(0).quotes())
+            .extracting("content")
+            .containsExactly("첫 번째 인용문", "두 번째 인용문");
 
         var order = orderService.createOrder(request);
 
@@ -96,6 +99,7 @@ class OrderServiceTest {
         assertThat(order.items().get(0).displayOrder()).isEqualTo(1);
         assertThat(order.items().get(0).quoteCount()).isEqualTo(2);
         assertThat(order.snapshotJson()).contains("\"ownerName\":\"테스트 사용자\"");
+        assertThat(order.snapshotJson()).contains("\"content\":\"첫 번째 인용문\"");
         assertThat(orderService.getOrders())
             .singleElement()
             .satisfies(summary -> {

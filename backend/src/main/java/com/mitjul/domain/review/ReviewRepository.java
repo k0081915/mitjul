@@ -11,6 +11,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     boolean existsByBookId(Long bookId);
 
+    long countByBookUserId(Long userId);
+
     long countByBookUserIdAndCreatedAtBetween(
         Long userId,
         LocalDateTime startDateTime,
