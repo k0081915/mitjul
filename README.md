@@ -43,7 +43,7 @@ git clone https://github.com/k0081915/mitjul.git
 cd mitjul
 
 # 환경변수 준비
-copy .env.example .env
+cp .env.example .env
 
 # 실행
 docker compose up --build
